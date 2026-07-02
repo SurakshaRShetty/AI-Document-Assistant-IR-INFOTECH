@@ -1,5 +1,5 @@
 # AI Document Chat System
-
+- 
 Upload PDF documents, ask questions about them, and get answers grounded in the source
 text — with citations (filename, page number, chunk id) and persisted chat history.
 
@@ -19,6 +19,20 @@ and [API_DOCUMENTATION.md](./API_DOCUMENTATION.md) for the full endpoint referen
 | LLM                | Groq (`llama-3.1-8b-instant`)                      |
 | Auth               | JWT access + refresh tokens                        |
 
+## Assignment Features
+
+- PDF Upload API
+- PDF Text Extraction
+- Document Chunking
+- SentenceTransformer Embeddings
+- ChromaDB Vector Database
+- Retrieval-Augmented Generation (RAG)
+- Question Answering with Source References
+- Chat History API
+- Multi-document Support
+- JWT Authentication
+
+  
 ## Features
 
 - PDF upload with text extraction and page-aware chunking

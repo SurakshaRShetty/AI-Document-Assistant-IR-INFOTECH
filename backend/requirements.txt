@@ -1,0 +1,16 @@
+fastapi
+uvicorn
+sqlalchemy
+psycopg2-binary
+chromadb==1.5.9
+sentence-transformers
+numpy==2.4.6
+groq
+bcrypt==5.0.0
+python-jose
+email-validator
+pydantic
+python-multipart
+pypdf
+python-dotenv
+

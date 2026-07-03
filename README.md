@@ -196,58 +196,51 @@ When a user submits a question, the backend generates an embedding for the query
 
 ## Application Workflow
 
-```text
-                         User
-                           │
-                           ▼
-                  Login / Signup (JWT)
-                           │
-                           ▼
-                     Upload PDF
-                           │
-                           ▼
-                  Extract Text (PyPDF)
-                           │
-                           ▼
-             Split Text into Chunks
-                           │
-                           ▼
-Generate Embeddings (SentenceTransformer)
-                           │
-            ┌──────────────┴──────────────┐
-            │                             │
-            ▼                             ▼
-      Store Metadata                Store Embeddings
-      (PostgreSQL)                    (ChromaDB)
-            │                             │
-            └──────────────┬──────────────┘
-                           │
-                           ▼
-                 User Asks a Question
-                           │
-                           ▼
-         Generate Query Embedding
-                           │
-                           ▼
- Retrieve Relevant Chunks from ChromaDB
-                           │
-                           ▼
-        Send Query + Retrieved Chunks
-                  to Groq LLM
-                           │
-                           ▼
-            Generate Final Answer
-                           │
-                           ▼
-     Return Answer + Source References
-      (Filename • Page • Chunk ID)
-                           │
-                           ▼
-        Save Chat History (PostgreSQL)
-                           │
-                           ▼
-                Display Response
-```
+                USER
+                  │
+                  ▼
+          Login / Signup
+                  │
+                  ▼
+          Upload PDF Document
+                  │
+                  ▼
+        Extract Text from PDF
+                  │
+                  ▼
+      Split into Smaller Chunks
+                  │
+                  ▼
+ Generate Embeddings (SentenceTransformer)
+                  │
+                  ▼
+      Store Embeddings in ChromaDB
+                  │
+                  ▼
+ Store Metadata & Chat History
+      in PostgreSQL Database
+                  │
+                  ▼
+         User Asks Question
+                  │
+                  ▼
+ Generate Query Embedding
+                  │
+                  ▼
+ Retrieve Relevant Chunks
+      from ChromaDB
+                  │
+                  ▼
+  Send Context + Question to Groq LLM
+                  │
+                  ▼
+      Generate Final Answer
+                  │
+                  ▼
+ Display Answer with
+ Filename + Page Number + Chunk ID
+
+ 
 ## Notes
 
 - Embeddings run locally via SentenceTransformer — no external embedding API key needed.

@@ -165,7 +165,89 @@ frontend/
     components/               # Header, PrivateRoute
     api/axios.js               # API client with JWT interceptor
 ```
+## Tech Stack
 
+| Technology | Purpose |
+|------------|---------|
+| React (Vite) | Builds the frontend user interface |
+| FastAPI | Develops REST APIs and backend services |
+| PostgreSQL | Stores users, document metadata, and chat history |
+| ChromaDB | Stores document embeddings and performs semantic search |
+| SentenceTransformer (all-MiniLM-L6-v2) | Generates vector embeddings for document chunks |
+| Groq (Llama 3.1 8B Instant) | Generates answers from retrieved document context |
+| JWT Authentication | Secures user authentication and API access |
+| PyPDF | Extracts text from uploaded PDF documents |
+
+---
+
+## Architecture
+
+The application follows a **Retrieval-Augmented Generation (RAG)** architecture.
+
+The **React frontend** provides the user interface where users can register, log in, upload PDF documents, and ask questions.
+
+The **FastAPI backend** handles authentication, PDF processing, document chunking, embedding generation, semantic retrieval, and communication with the Large Language Model.
+
+When a PDF is uploaded, the backend extracts the text page by page, splits it into smaller chunks, generates embeddings using **SentenceTransformer**, and stores those embeddings in **ChromaDB**. Document metadata, user information, and chat history are stored in **PostgreSQL**.
+
+When a user submits a question, the backend generates an embedding for the query and performs semantic search in **ChromaDB** to retrieve the most relevant document chunks. These retrieved chunks are then provided to the **Groq LLM**, which generates the final answer. The response is returned to the frontend along with **source references** including the filename, page number, and chunk ID. Each conversation is also stored in PostgreSQL for chat history.
+
+---
+
+## Application Workflow
+
+```text
+                         User
+                           │
+                           ▼
+                  Login / Signup (JWT)
+                           │
+                           ▼
+                     Upload PDF
+                           │
+                           ▼
+                  Extract Text (PyPDF)
+                           │
+                           ▼
+             Split Text into Chunks
+                           │
+                           ▼
+Generate Embeddings (SentenceTransformer)
+                           │
+            ┌──────────────┴──────────────┐
+            │                             │
+            ▼                             ▼
+      Store Metadata                Store Embeddings
+      (PostgreSQL)                    (ChromaDB)
+            │                             │
+            └──────────────┬──────────────┘
+                           │
+                           ▼
+                 User Asks a Question
+                           │
+                           ▼
+         Generate Query Embedding
+                           │
+                           ▼
+ Retrieve Relevant Chunks from ChromaDB
+                           │
+                           ▼
+        Send Query + Retrieved Chunks
+                  to Groq LLM
+                           │
+                           ▼
+            Generate Final Answer
+                           │
+                           ▼
+     Return Answer + Source References
+      (Filename • Page • Chunk ID)
+                           │
+                           ▼
+        Save Chat History (PostgreSQL)
+                           │
+                           ▼
+                Display Response
+```
 ## Notes
 
 - Embeddings run locally via SentenceTransformer — no external embedding API key needed.

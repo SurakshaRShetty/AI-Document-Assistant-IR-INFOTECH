@@ -193,7 +193,7 @@ When a PDF is uploaded, the backend extracts the text page by page, splits it in
 When a user submits a question, the backend generates an embedding for the query and performs semantic search in **ChromaDB** to retrieve the most relevant document chunks. These retrieved chunks are then provided to the **Groq LLM**, which generates the final answer. The response is returned to the frontend along with **source references** including the filename, page number, and chunk ID. Each conversation is also stored in PostgreSQL for chat history.
 
 ---
-## Application Workflow
+## Application Workflow 
                 USER
                   │
                   ▼
